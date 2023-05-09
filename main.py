@@ -1,11 +1,3 @@
-###############################################
-#           Template made by Person0z         #
-#          https://github.com/Person0z        #
-#           Copyright© Person0z, 2022         #
-#           Do Not Remove This Header         #
-###############################################
-
-# Imports Don't Remove any!!
 import disnake
 from disnake.ext import commands, tasks
 import os
@@ -15,11 +7,8 @@ import time
 import asyncio
 import random
 import sys
+import config
 
-# Loading things from config
-import config    # The config will be updated to a better version soon, 
-        
-# Setting up the bot
 bot = commands.Bot(
     command_prefix=config.prefix,
     intents=disnake.Intents.all(),
@@ -64,25 +53,13 @@ async def update(ctx):
         embed = disnake.Embed(title="Error", description=f"An error occured while updating the bot! {e}", color=config.Error())
         await ctx.send(embed=embed)
 
-# On Ready
+
 @bot.event
 async def on_ready():
     if config.version != "1.5.9":
         print('===============================================')
         print('WARNING! You are not using the latest version!')
         print('===============================================')
-    print('###############################################')
-    print('#           Template made by Person0z         #')
-    print('#          https://github.com/Person0z        #')
-    print('#           Copyright© Person0z, 2022         #') 
-    print("#                                             #")
-    print('#           Join Discord For Support!         #')
-    print('#         https://discord.gg/5dEadru9mU       #')
-    print("#                                             #")
-    print('#           Do Not Remove This Header         #')
-    print('###############################################')
-    print('')
-    print('')
     print('===============================================')
     print("The bot is ready!")
     print(f'Logged in as {bot.user.name}#{bot.user.discriminator} | {bot.user.id}')
@@ -99,17 +76,14 @@ async def on_ready():
     await asyncio.sleep(0.01)
     print('===============================================')
 
-# Status Task
 @tasks.loop(minutes=0.15)
 async def status_task():
     await bot.change_presence(activity=disnake.Game(random.choice(config.activity)))
 
-# Load Cogs On Start
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
-# A slash command to reload cogs
 @bot.slash_command(name="reload", description="Reloads a cog")
 async def reload(inter: disnake.ApplicationCommandInteraction, cog: str):
     try:
@@ -133,7 +107,6 @@ async def reload(inter: disnake.ApplicationCommandInteraction, cog: str):
     except Exception as e:
         print(f'An error occured while reloading a cog! {e}')
 
-# A slash command to load cogs
 @bot.slash_command(name="load", description="Loads a cog")
 async def load(inter: disnake.ApplicationCommandInteraction, cog: str):
     try:
@@ -157,7 +130,6 @@ async def load(inter: disnake.ApplicationCommandInteraction, cog: str):
     except Exception as e:
         print(f'An error occured while loading a cog! {e}')
 
-# A slash command to unload cogs
 @bot.slash_command(name="unload", description="Unloads a cog")
 async def unload(inter: disnake.ApplicationCommandInteraction, cog: str):
     try:
@@ -180,6 +152,5 @@ async def unload(inter: disnake.ApplicationCommandInteraction, cog: str):
             await inter.send(embed=embed, ephemeral=True)
     except Exception as e:
         print(f'An error occured while unloading a cog! {e}')
-    
-# Run The Bot 
+
 bot.run(config.token, reconnect=True)
