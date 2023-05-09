@@ -1,0 +1,2 @@
+# PikaPikaDiscordBot
+The multifonction bot
