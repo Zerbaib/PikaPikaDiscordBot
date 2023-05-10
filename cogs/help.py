@@ -11,7 +11,7 @@ class help(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f'Loaded Cog Help')
-    @commands.slash_command(name='help', description='Show help command',)
+    @commands.slash_command(name='help', description='Show help command')
     async def help(
         inter: disnake.ApplicationCommandInteraction,
         action: str = commands.Param(choices=["general", "fun", 'tickets', 'radio', 'rank', 'moderation']),

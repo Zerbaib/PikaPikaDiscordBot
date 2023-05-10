@@ -1,10 +1,3 @@
-###############################################
-#           Template made by Person0z         #
-#          https://github.com/Person0z        #
-#           Copyright© Person0z, 2022         #
-#           Do Not Remove This Header         #
-###############################################
-
 import json
 import random
 import os
@@ -20,11 +13,9 @@ class Rank(commands.Cog):
         self.data = {}
         self.cooldowns = {}
         self.level_roles = config.level_roles
-
         if os.path.exists("data/levels.json"):
             with open("data/levels.json", "r") as f:
                 self.data = json.load(f)
-
         self._cd_mapping = CooldownMapping.from_cooldown(1, 10.0, BucketType.user)
 
     def save_data(self):
@@ -34,7 +25,7 @@ class Rank(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('Loaded Cog rank')
-        
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:
@@ -71,7 +62,6 @@ class Rank(commands.Cog):
         if xp >= xp_required:
             self.data[guild_id][user_id]["level"] = lvl + 1
 
-            # Add role to user if they have reached a certain level
             if lvl + 1 in self.level_roles:
                 role_id = self.level_roles[lvl + 1]
                 role = message.guild.get_role(role_id)
@@ -86,7 +76,7 @@ class Rank(commands.Cog):
             await message.channel.send(embed=embed, delete_after=10)
             self.save_data()
     
-    @commands.slash_command()
+    @commands.slash_command(name='rank', description='Show your/other rank')
     async def rank(self, inter: disnake.ApplicationCommandInteraction, user: disnake.Member = None):
         try:
             if user is None:
@@ -110,7 +100,7 @@ class Rank(commands.Cog):
             print(f"Error sending rank command: {e}")
             await inter.channel.send(f"Error sending rank command: {e}")
 
-    @commands.slash_command()
+    @commands.slash_command(name='leaderboard', description='Show the top 10 xp leaderboard')
     async def leaderboard(self, inter: disnake.ApplicationCommandInteraction):
         guild_id = str(inter.guild.id)
         if guild_id not in self.data:
@@ -129,7 +119,7 @@ class Rank(commands.Cog):
                 break
         await inter.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.slash_command(name='addlevel', description='Add level to a member')
     @commands.has_permissions(administrator=True)
     async def addlevel(self, inter: disnake.ApplicationCommandInteraction, user: disnake.Member, levels: int):
         guild_id = str(inter.guild.id)
@@ -146,7 +136,7 @@ class Rank(commands.Cog):
         embed = disnake.Embed(title=f"{user.name} Given Levels", description=f"{user.mention} has been given {levels} levels!", color=config.Success())
         await inter.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.slash_command(name='removelevel', description='Remove level from a member')
     @commands.has_permissions(administrator=True)
     async def removelevels(self, inter: disnake.ApplicationCommandInteraction, user: disnake.Member, levels: int):
         guild_id = str(inter.guild.id)
@@ -175,9 +165,9 @@ class Rank(commands.Cog):
         embed = disnake.Embed(title=f"{user.name} Lost Levels", description=f"{user.mention} has lost {levels} levels!", color=config.Success())
         await inter.send(embed=embed)
 
-    @commands.slash_command(name="remove-xp", description="Remove XP from a member.")
+    @commands.slash_command(name="removexp", description="Remove XP from a member.")
     @commands.has_permissions(administrator=True)
-    async def remove_xp(self, inter: disnake.ApplicationCommandInteraction, member: disnake.Member, amount: int):
+    async def removexp(self, inter: disnake.ApplicationCommandInteraction, member: disnake.Member, amount: int):
         guild_id = str(inter.guild.id)
         user_id = str(member.id)
 
@@ -204,7 +194,7 @@ class Rank(commands.Cog):
         )
         await inter.response.send_message(embed=embed, ephemeral=True)
 
-    @commands.slash_command()
+    @commands.slash_command(name='addxp', description='Add xp to a pepole')
     @commands.has_permissions(administrator=True)
     async def addxp(self, inter: disnake.ApplicationCommandInteraction, member: disnake.Member, amount: int):
         guild_id = str(inter.guild.id)
